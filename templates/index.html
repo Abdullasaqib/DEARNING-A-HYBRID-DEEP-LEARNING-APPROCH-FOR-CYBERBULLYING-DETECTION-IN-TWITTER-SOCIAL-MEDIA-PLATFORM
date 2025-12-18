@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberGuard | Advanced Bullying Detection</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <!-- EXACT TITLE AS REQUESTED -->
+        <h1 class="title">DEARNING A HYBRID DEEP LEARNING APPROCH FOR CYBERBULLYING DETECTION IN TWITTER SOCIAL MEDIA
+            PLATFORM</h1>
+
+        <div class="card">
+            <form action="/predict" method="post" id="analyzeForm">
+                <div class="input-group">
+                    <textarea name="tweet" id="tweetInput"
+                        placeholder="Enter tweet or message to analyze for cyberbullying..."
+                        required>{{ tweet if tweet else '' }}</textarea>
+                </div>
+                <button type="submit" class="btn">Start Analysis</button>
+            </form>
+
+            <div class="quick-test">
+                <span class="quick-test-label">Quick Test (Positive Greetings):</span>
+                <div class="tag-container">
+                    <span class="tag" onclick="fillInput('Hello, hope you have a great day!')">Hello!</span>
+                    <span class="tag" onclick="fillInput('Good morning everyone, stay positive!')">Good Morning</span>
+                    <span class="tag" onclick="fillInput('You are doing an amazing job, keep it up!')">Amazing
+                        Job</span>
+                    <span class="tag" onclick="fillInput('Hi there, just testing this cool app.')">Hi!</span>
+                </div>
+            </div>
+        </div>
+
+        {% if result %}
+        <div class="result-card {% if result.is_bullying %}danger{% else %}safe{% endif %}">
+            <div class="result-header">
+                <span class="result-icon">{% if result.is_bullying %}⚠️{% else %}✅{% endif %}</span>
+                <h2>{% if result.is_bullying %}Cyberbullying Detected{% else %}Safe Message{% endif %}</h2>
+            </div>
+
+            <div class="confidence-bar-wrap">
+                <div class="confidence-bar" style="width: {{ result.confidence }}"></div>
+            </div>
+
+            <div class="details">
+                <div class="detail-row">
+                    <span class="detail-label">Classification</span>
+                    <span class="detail-value"><strong>{{ result.class.replace('_', ' ').title() }}</strong></span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">AI Confidence</span>
+                    <span class="detail-value">{{ result.confidence }}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Status</span>
+                    <span class="detail-value">{% if result.is_bullying %}Harmful Content{% else %}Appropriate Content{%
+                        endif %}</span>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        function fillInput(text) {
+            document.getElementById('tweetInput').value = text;
+            // Optional: Auto-submit on click
+            // document.getElementById('analyzeForm').submit();
+        }
+
+        // Animated bar effect
+        window.addEventListener('load', () => {
+            const bar = document.querySelector('.confidence-bar');
+            if (bar) {
+                const width = bar.style.width;
+                bar.style.width = '0';
+                setTimeout(() => {
+                    bar.style.width = width;
+                }, 100);
+            }
+        });
+    </script>
+</body>
+
+</html>
